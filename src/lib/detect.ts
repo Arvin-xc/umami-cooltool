@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import path from 'path';
 import { browserName, detectOS } from 'detect-browser';
 import isLocalhost from 'is-localhost-ip';
@@ -17,10 +18,13 @@ let lookup;
 
 const getClientIp = req => {
   const xForwardedFor = req.headers['x-forwarded-for'];
+  console.log('x-forwarded-for:', xForwardedFor);
   if (xForwardedFor) {
     const ips = xForwardedFor.split(',');
+    console.log('Parsed IP:', ips[0].trim());
     return ips[0].trim();
   }
+  console.info('Remote Address:', req.connection.remoteAddress);
   return req.connection.remoteAddress;
 };
 export function getIpAddress(req: NextApiRequestCollect) {
