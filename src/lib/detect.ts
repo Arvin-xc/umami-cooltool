@@ -1,5 +1,4 @@
 import path from 'path';
-import { getClientIp } from 'request-ip';
 import { browserName, detectOS } from 'detect-browser';
 import isLocalhost from 'is-localhost-ip';
 import maxmind from 'maxmind';
@@ -16,6 +15,14 @@ import { NextApiRequestCollect } from 'pages/api/send';
 
 let lookup;
 
+const getClientIp = req => {
+  const xForwardedFor = req.headers['x-forwarded-for'];
+  if (xForwardedFor) {
+    const ips = xForwardedFor.split(',');
+    return ips[0].trim();
+  }
+  return req.connection.remoteAddress;
+};
 export function getIpAddress(req: NextApiRequestCollect) {
   const customHeader = String(process.env.CLIENT_IP_HEADER).toLowerCase();
 
